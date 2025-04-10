@@ -38,4 +38,4 @@ jobs:
         run: cdk deploy --all --require-approval never
 
       - name: 📤 Show CDK Output
-        run: cdk list && cdk outputs
+        run: cdk list && cdk synth
