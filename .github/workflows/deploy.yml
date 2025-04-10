@@ -6,30 +6,36 @@ on:
 
 jobs:
   deploy:
+    name: CDK Deploy to AWS
     runs-on: ubuntu-latest
+
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: ⚙️ Set Up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'npm'
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: |
           npm install -g aws-cdk
-          npm install
+          npm ci
 
-      - name: Configure AWS credentials
+      - name: 🔐 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: CDK Deploy
+      - name: 🚀 Deploy with CDK
         run: cdk deploy --all --require-approval never
+
+      - name: 📤 Show CDK Output
+        run: cdk list && cdk outputs
